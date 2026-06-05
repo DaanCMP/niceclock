@@ -153,7 +153,7 @@
     connectClockSync();
     setInterval(syncServerOffset, 5 * 60 * 1000);
     await loadWeather();
-    setInterval(loadWeather, 10 * 60 * 1000);
+    setInterval(loadWeather, 2 * 60 * 1000);
   }
 
   init();

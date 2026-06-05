@@ -82,7 +82,6 @@ async function fetchFromOpenMeteo(lat, lon, timezone) {
       const json = await response.json();
       const current = json.current;
       const isDay = current.is_day === 1;
-      const condition = wmoToCondition(current.weather_code, isDay);
 
       return {
         temperature: Math.round(current.temperature_2m),
@@ -91,7 +90,6 @@ async function fetchFromOpenMeteo(lat, lon, timezone) {
         weatherCode: current.weather_code,
         description: wmoDescription(current.weather_code),
         isDay,
-        condition,
         sunrise: json.daily?.sunrise?.[0] ?? null,
         sunset: json.daily?.sunset?.[0] ?? null,
         fetchedAt: new Date().toISOString(),
@@ -111,23 +109,23 @@ async function fetchWeather(lat, lon, timezone) {
   const cacheKey = `${lat},${lon},${timezone}`;
   const cached = weatherCache.get(cacheKey);
   if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
-    return cached.data;
+    return { data: cached.data, fromCache: true };
   }
 
   return runSerialized(async () => {
     const freshCached = weatherCache.get(cacheKey);
     if (freshCached && Date.now() - freshCached.fetchedAt < CACHE_TTL_MS) {
-      return freshCached.data;
+      return { data: freshCached.data, fromCache: true };
     }
 
     try {
       const data = await fetchFromOpenMeteo(lat, lon, timezone);
       weatherCache.set(cacheKey, { data, fetchedAt: Date.now() });
-      return data;
+      return { data, fromCache: false };
     } catch (err) {
       if (freshCached) {
         console.warn("Weather fetch failed, serving stale cache:", err.message);
-        return freshCached.data;
+        return { data: freshCached.data, fromCache: true };
       }
       throw err;
     }
@@ -220,6 +218,58 @@ function resolveBackgroundUrl(slug, condition) {
   return "/backgrounds/partly-cloudy-day.svg";
 }
 
+function isDayFromSunTimes(sunrise, sunset, timezone) {
+  if (!sunrise || !sunset) return null;
+
+  const nowParts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: timezone,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date());
+
+  const nowMin =
+    parseInt(nowParts.find((p) => p.type === "hour").value, 10) * 60 +
+    parseInt(nowParts.find((p) => p.type === "minute").value, 10);
+
+  const toMin = (iso) => {
+    const [, time] = iso.split("T");
+    const [h, m] = time.split(":").map(Number);
+    return h * 60 + m;
+  };
+
+  const riseMin = toMin(sunrise);
+  const setMin = toMin(sunset);
+
+  if (riseMin <= setMin) {
+    return nowMin >= riseMin && nowMin < setMin;
+  }
+
+  return nowMin >= riseMin || nowMin < setMin;
+}
+
+function enrichWeather(config, weather, fromCache) {
+  const computedDay = isDayFromSunTimes(
+    weather.sunrise,
+    weather.sunset,
+    config.timezone
+  );
+  const isDay = computedDay ?? weather.isDay;
+  const condition = wmoToCondition(weather.weatherCode, isDay);
+  const background = backgroundCondition(condition);
+
+  console.log(
+    `[weather] ${config.city}: ${fromCache ? "cache" : "fetch"} | isDay=${isDay ? 1 : 0} | ${condition} → ${background}.jpg | ${weather.temperature}°C`
+  );
+
+  return {
+    ...weather,
+    isDay,
+    condition,
+    backgroundUrl: resolveBackgroundUrl(config.slug, condition),
+  };
+}
+
 app.get("/api/config", (req, res) => {
   const displayId = req.query.display === "2" ? 2 : 1;
   res.json({ display: displayId, ...displays[displayId] });
@@ -230,7 +280,7 @@ app.get("/api/weather", async (req, res) => {
   const config = displays[displayId];
 
   try {
-    const weather = await fetchWeather(
+    const { data, fromCache } = await fetchWeather(
       config.lat,
       config.lon,
       config.timezone
@@ -239,8 +289,7 @@ app.get("/api/weather", async (req, res) => {
       city: config.city,
       timezone: config.timezone,
       slug: config.slug,
-      backgroundUrl: resolveBackgroundUrl(config.slug, weather.condition),
-      ...weather,
+      ...enrichWeather(config, data, fromCache),
     });
   } catch (err) {
     console.error("Weather fetch failed:", err.message);
