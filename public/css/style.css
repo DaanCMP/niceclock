@@ -119,7 +119,7 @@ body {
 }
 
 #humidity::before {
-  content: "Humidity";
+  content: "Luchtvochtigheid";
 }
 
 #wind::before {

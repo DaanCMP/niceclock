@@ -19,7 +19,7 @@
   let wsConnected = false;
 
   function formatClockParts(instant) {
-    const parts = new Intl.DateTimeFormat("en-GB", {
+    const parts = new Intl.DateTimeFormat("nl-NL", {
       timeZone: timezone,
       hour: "2-digit",
       minute: "2-digit",
@@ -36,7 +36,7 @@
   }
 
   function formatDate(instant) {
-    return new Intl.DateTimeFormat("en-GB", {
+    return new Intl.DateTimeFormat("nl-NL", {
       timeZone: timezone,
       weekday: "long",
       day: "numeric",
@@ -141,7 +141,7 @@
       windEl.textContent = data.windSpeed + " km/h";
       setBackground(data.backgroundUrl);
     } catch {
-      descEl.textContent = "Weather unavailable";
+      descEl.textContent = "Weer niet beschikbaar";
       setBackground("/backgrounds/partly-cloudy-day.svg");
     }
   }

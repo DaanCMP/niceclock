@@ -160,29 +160,29 @@ function wmoToCondition(code, isDay) {
 
 function wmoDescription(code) {
   const descriptions = {
-    0: "Clear sky",
-    1: "Mainly clear",
-    2: "Partly cloudy",
-    3: "Overcast",
-    45: "Foggy",
-    48: "Depositing rime fog",
-    51: "Light drizzle",
-    53: "Moderate drizzle",
-    55: "Dense drizzle",
-    61: "Slight rain",
-    63: "Moderate rain",
-    65: "Heavy rain",
-    71: "Slight snow",
-    73: "Moderate snow",
-    75: "Heavy snow",
-    80: "Rain showers",
-    81: "Moderate showers",
-    82: "Violent showers",
-    95: "Thunderstorm",
-    96: "Thunderstorm with hail",
-    99: "Thunderstorm with heavy hail",
+    0: "Heldere lucht",
+    1: "Overwegend helder",
+    2: "Gedeeltelijk bewolkt",
+    3: "Betrokken",
+    45: "Mistig",
+    48: "IJsnevel",
+    51: "Lichte motregen",
+    53: "Matige motregen",
+    55: "Dichte motregen",
+    61: "Lichte regen",
+    63: "Matige regen",
+    65: "Zware regen",
+    71: "Lichte sneeuw",
+    73: "Matige sneeuw",
+    75: "Zware sneeuw",
+    80: "Regenbuien",
+    81: "Matige buien",
+    82: "Hevige buien",
+    95: "Onweer",
+    96: "Onweer met hagel",
+    99: "Onweer met zware hagel",
   };
-  return descriptions[code] || "Unknown";
+  return descriptions[code] || "Onbekend";
 }
 
 const BACKGROUND_CONDITIONS = {
