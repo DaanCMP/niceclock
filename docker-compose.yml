@@ -1,0 +1,15 @@
+services:
+  niceclock:
+    build: .
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      DISPLAY_1_CITY: ${DISPLAY_1_CITY:-Willemstad}
+      DISPLAY_1_LAT: ${DISPLAY_1_LAT:-12.1224}
+      DISPLAY_1_LON: ${DISPLAY_1_LON:--68.8824}
+      DISPLAY_1_TIMEZONE: ${DISPLAY_1_TIMEZONE:-America/Curacao}
+      DISPLAY_2_CITY: ${DISPLAY_2_CITY:-Hilversum}
+      DISPLAY_2_LAT: ${DISPLAY_2_LAT:-52.2292}
+      DISPLAY_2_LON: ${DISPLAY_2_LON:-5.1669}
+      DISPLAY_2_TIMEZONE: ${DISPLAY_2_TIMEZONE:-Europe/Amsterdam}
+    restart: unless-stopped

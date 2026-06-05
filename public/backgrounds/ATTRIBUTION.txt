@@ -1,0 +1,16 @@
+Background photos (royalty-free):
+
+Willemstad
+  day.jpg   — Handelskade, Willemstad (Unsplash)
+  night.jpg — Coastal harbour at twilight (Unsplash / Gunnar Ridderström)
+  rain.jpg  — Palm trees in rain (Unsplash / Nathan Dumlao)
+
+Hilversum
+  day.jpg   — Tulip fields & windmill, Netherlands (Pexels)
+  night.jpg — Amsterdam canal at night (Pexels)
+  rain.jpg  — Rainy Dutch street (Pexels / Mathias Reding)
+
+Weather mapping:
+  clear / cloudy day  → day.jpg
+  clear / cloudy night → night.jpg
+  rain, fog, snow, storm → rain.jpg

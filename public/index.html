@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>niceclock</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div id="background" class="background" aria-hidden="true"></div>
+    <div class="overlay" aria-hidden="true"></div>
+
+    <main class="content">
+      <p class="city" id="city">Loading…</p>
+      <time class="clock" id="clock" datetime="">00:00:00</time>
+      <p class="date" id="date"></p>
+
+      <section class="weather" id="weather" aria-live="polite">
+        <div class="weather-main">
+          <span class="weather-temp" id="temp">—</span>
+          <span class="weather-desc" id="desc">Loading weather…</span>
+        </div>
+        <div class="weather-details">
+          <span id="humidity">—</span>
+          <span id="wind">—</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="/js/app.js"></script>
+  </body>
+</html>

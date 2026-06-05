@@ -1,0 +1,11 @@
+Each city folder needs 3 landscape photos (1920px wide or larger):
+
+  day.jpg    — sunny / daytime
+  night.jpg  — night or blue hour
+  rain.jpg   — rain, fog, or storm
+
+Folders:
+  willemstad/
+  hilversum/
+
+Photos are included. Refresh the browser to see them.
